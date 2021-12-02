@@ -86,4 +86,4 @@ menu s = do
 main :: IO ()
 main = do
     menu initial
-    void $ system "clear"
+    system "clear" & void
