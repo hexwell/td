@@ -1,6 +1,7 @@
 import Control.Category ((>>>))
 import Control.Monad (unless)
 import Data.Set (Set, empty, insert, delete, toList)
+import Data.Function ((&))
 import System.IO (stdout, hFlush)
 
 type Item = String
@@ -31,7 +32,7 @@ menu :: State -> IO ()
 menu s = do
   putStrLn ""
   putStrLn "List:"
-  mapM_ (format >>> putStrLn) $ zip [0..] $ toList s
+  toList s & zip [0..] & mapM_ (format >>> putStrLn)
   putStrLn "--- ~ ---"
   putStrLn ""
 
