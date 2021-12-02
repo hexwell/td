@@ -20,9 +20,9 @@ edit :: Int -> Item -> State -> State
 edit i t = (remove i) >>> (add t)
 
 exec :: [String] -> State -> State
-exec ("a":ss) = add $ unwords ss
+exec ("a":ss) = unwords ss & add
 exec ("r":i:[]) = remove (read i)
-exec ("e":i:ss) = edit (read i) $ unwords ss
+exec ("e":i:ss) = unwords ss & edit (read i)
 exec _ = id
 
 format :: (Int, Item) -> String
