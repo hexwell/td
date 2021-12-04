@@ -39,7 +39,7 @@ edit :: State -> State
 edit (State set mode textIndex) = let item = (toList set) !! (read textIndex) in State (delete item set) mode item
 
 textbox :: (State -> State) -> Char -> State -> State
-textbox _      '!'    s                     = ((setMode C) . clear) s
+textbox _      '!'    s                     = (clear >>> (setMode C)) s
 textbox action '\n'   s                     = action s
 textbox _      '\DEL' (State set mode "")   = State set mode ""
 textbox _      '\DEL' (State set mode text) = State set mode (init text)
