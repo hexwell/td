@@ -1,6 +1,7 @@
 import Control.Category ((>>>))
-import Control.Monad (unless, void)
+import Control.Monad (unless)
 import Data.Function ((&))
+import Data.Functor (void)
 import Data.List (isInfixOf)
 import Data.Set (Set, empty, toList, insert, delete)
 import System.IO (stdout, hFlush)
