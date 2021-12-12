@@ -59,12 +59,12 @@ modebox (State _ R _) = textbox (remove >>> clear >>> (setMode C))
 modebox (State _ E _) = textbox (  edit           >>> (setMode A))
 
 menu :: State -> IO ()
-menu s = do
+menu s@(State set mode text) = do
   system "clear"
 
   putStrLn "List:"
-  let State set mode text = s in
-    (toList set)
+
+  toList set
     & (
       if (mode == A)
       then filter (isInfixOf text)
@@ -72,11 +72,11 @@ menu s = do
     )
     & zip [0..]
     & mapM_ (format >>> putStrLn)
+
   putStrLn "--- ~ ---"
   putStrLn ""
 
-  let State _ mode text = s in
-    putStr $ (show mode) ++ " > " ++ text
+  putStr $ (show mode) ++ " > " ++ text
   hFlush stdout
   char <- getChar
 
