@@ -17,7 +17,7 @@ remove :: Int -> State -> State
 remove i = flip delete <*> (toList >>> (!! i))
 
 edit :: Int -> Item -> State -> State
-edit i t = (remove i) >>> (add t)
+edit i t = remove i >>> add t
 
 exec :: [String] -> State -> State
 exec ("a":ss) = unwords ss & add
@@ -26,7 +26,7 @@ exec ("e":i:ss) = unwords ss & edit (read i)
 exec _ = id
 
 format :: (Int, Item) -> String
-format (i, s) = (show i) ++ " " ++ s
+format (i, s) = show i ++ " " ++ s
 
 menu :: State -> IO ()
 menu s = do

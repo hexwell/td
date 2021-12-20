@@ -22,7 +22,7 @@ initial :: State
 initial = State empty C ""
 
 format :: (Int, Item) -> String
-format (i, s) = (show i) ++ " " ++ s
+format (i, s) = show i ++ " " ++ s
 
 setMode :: Mode -> State -> State
 setMode m (State s _ text) = State s m text
@@ -34,17 +34,17 @@ add :: State -> State
 add (State set mode text) = State (insert text set) mode text
 
 remove :: State -> State
-remove (State set mode textIndex) = State (delete ((toList set) !! (read textIndex)) set) mode textIndex
+remove (State set mode textIndex) = State (delete (toList set !! read textIndex) set) mode textIndex
 
 edit :: State -> State
-edit (State set mode textIndex) = let item = (toList set) !! (read textIndex) in State (delete item set) mode item
+edit (State set mode textIndex) = let item = toList set !! read textIndex in State (delete item set) mode item
 
 textbox :: (State -> State) -> Char -> State -> State
-textbox _      '!'    s                     = (clear >>> (setMode C)) s
+textbox _      '!'    s                     = (clear >>> setMode C) s
 textbox action '\n'   s                     = action s
 textbox _      '\DEL' (State set mode "")   = State set mode ""
 textbox _      '\DEL' (State set mode text) = State set mode (init text)
-textbox _      char   (State set mode text) = State set mode (text ++ char:[])
+textbox _      char   (State set mode text) = State set mode (text ++ [char])
 
 cmdbox :: Char -> State -> State
 cmdbox 'a' = setMode A
@@ -54,9 +54,9 @@ cmdbox _   = id
 
 modebox :: State -> Char -> State -> State
 modebox (State _ C _) = cmdbox
-modebox (State _ A _) = textbox (   add >>> clear >>> (setMode C))
-modebox (State _ R _) = textbox (remove >>> clear >>> (setMode C))
-modebox (State _ E _) = textbox (  edit           >>> (setMode A))
+modebox (State _ A _) = textbox (   add >>> clear >>> setMode C)
+modebox (State _ R _) = textbox (remove >>> clear >>> setMode C)
+modebox (State _ E _) = textbox (  edit           >>> setMode A)
 
 menu :: State -> IO ()
 menu s@(State set mode text) = do
@@ -66,7 +66,7 @@ menu s@(State set mode text) = do
 
   toList set
     & (
-      if (mode == A)
+      if mode == A
       then filter (isInfixOf text)
       else id
     )
@@ -76,7 +76,7 @@ menu s@(State set mode text) = do
   putStrLn "--- ~ ---"
   putStrLn ""
 
-  putStr $ (show mode) ++ " > " ++ text
+  putStr $ show mode ++ " > " ++ text
   hFlush stdout
   char <- getChar
 
