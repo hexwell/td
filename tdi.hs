@@ -52,11 +52,11 @@ cmdbox 'r' = setMode R
 cmdbox 'e' = setMode E
 cmdbox _   = id
 
-modebox :: State -> Char -> State -> State
-modebox (State _ C _) = cmdbox
-modebox (State _ A _) = textbox (   add >>> clear >>> setMode C)
-modebox (State _ R _) = textbox (remove >>> clear >>> setMode C)
-modebox (State _ E _) = textbox (  edit           >>> setMode A)
+modebox :: Mode -> Char -> State -> State
+modebox C = cmdbox
+modebox A = textbox (   add >>> clear >>> setMode C)
+modebox R = textbox (remove >>> clear >>> setMode C)
+modebox E = textbox (  edit           >>> setMode A)
 
 menu :: State -> IO ()
 menu s@(State set mode text) = do
@@ -82,7 +82,7 @@ menu s@(State set mode text) = do
 
   unless (char == 'q')
     $ menu
-      $ (modebox s) char s
+      $ (modebox mode) char s
 
 main :: IO ()
 main = do
